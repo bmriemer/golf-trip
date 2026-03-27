@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/context/AuthContext'
+import WheelbarrowLogo from './WheelbarrowLogo'
 
 const NAV_LINKS = [
   { href: '/', label: 'Home', icon: '🏠' },
@@ -21,16 +22,16 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-forest-900/95 backdrop-blur-md border-b border-forest-700">
+      <nav className="sticky top-0 z-50 bg-navy-900/95 backdrop-blur-md border-b border-navy-700">
         <div className="max-w-6xl mx-auto px-4">
           <div className="flex items-center justify-between h-14">
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center gap-2 text-gold-400 font-serif font-bold text-lg hover:text-gold-300 transition-colors"
+              className="flex items-center gap-2.5 text-gold-400 font-serif font-bold text-lg hover:text-gold-300 transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              <span>⛳</span>
+              <WheelbarrowLogo className="w-7 h-8 text-gold-400" />
               <span className="hidden sm:block">Wheelbarrow</span>
               <span className="sm:hidden">WBI</span>
             </Link>
@@ -43,8 +44,8 @@ export default function Navbar() {
                   href={link.href}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                     pathname === link.href
-                      ? 'bg-gold-500 text-forest-950'
-                      : 'text-green-300 hover:text-gold-400 hover:bg-forest-800'
+                      ? 'bg-gold-400 text-navy-950'
+                      : 'text-slate-300 hover:text-gold-400 hover:bg-navy-800'
                   }`}
                 >
                   {link.label}
@@ -55,13 +56,13 @@ export default function Navbar() {
             {/* Right side */}
             <div className="flex items-center gap-2">
               {isAdmin && (
-                <span className="hidden sm:flex items-center gap-1 text-xs text-gold-400 bg-gold-500/10 border border-gold-500/30 px-2 py-1 rounded-full">
+                <span className="hidden sm:flex items-center gap-1 text-xs text-gold-400 bg-gold-400/10 border border-gold-400/30 px-2 py-1 rounded-full">
                   <span>🔑</span> Admin
                 </span>
               )}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden p-2 text-green-300 hover:text-gold-400 rounded-lg"
+                className="md:hidden p-2 text-slate-300 hover:text-gold-400 rounded-lg"
                 aria-label="Toggle menu"
               >
                 {menuOpen ? (
@@ -82,9 +83,9 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="fixed inset-0 z-40 md:hidden" onClick={() => setMenuOpen(false)}>
-          <div className="absolute inset-0 bg-forest-950/80" />
+          <div className="absolute inset-0 bg-navy-950/80" />
           <div
-            className="absolute top-14 left-0 right-0 bg-forest-900 border-b border-forest-700 shadow-xl"
+            className="absolute top-14 left-0 right-0 bg-navy-900 border-b border-navy-700 shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-4 py-3 space-y-1">
@@ -95,8 +96,8 @@ export default function Navbar() {
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-base font-medium transition-all ${
                     pathname === link.href
-                      ? 'bg-gold-500 text-forest-950'
-                      : 'text-green-200 hover:bg-forest-800 hover:text-gold-400'
+                      ? 'bg-gold-400 text-navy-950'
+                      : 'text-slate-200 hover:bg-navy-800 hover:text-gold-400'
                   }`}
                 >
                   <span>{link.icon}</span>
@@ -104,10 +105,10 @@ export default function Navbar() {
                 </Link>
               ))}
               {isAdmin && (
-                <div className="pt-2 border-t border-forest-700 mt-2">
+                <div className="pt-2 border-t border-navy-700 mt-2">
                   <button
                     onClick={() => { logout(); setMenuOpen(false) }}
-                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-400 hover:bg-forest-800"
+                    className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-400 hover:bg-navy-800"
                   >
                     <span>🚪</span> Sign out
                   </button>
@@ -119,7 +120,7 @@ export default function Navbar() {
       )}
 
       {/* Bottom mobile nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-forest-900/95 backdrop-blur-md border-t border-forest-700">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-navy-900/95 backdrop-blur-md border-t border-navy-700">
         <div className="flex">
           {NAV_LINKS.map((link) => (
             <Link
@@ -128,7 +129,7 @@ export default function Navbar() {
               className={`flex-1 flex flex-col items-center gap-0.5 py-2 text-xs font-medium transition-colors ${
                 pathname === link.href
                   ? 'text-gold-400'
-                  : 'text-green-500 hover:text-green-300'
+                  : 'text-slate-500 hover:text-slate-300'
               }`}
             >
               <span className="text-lg">{link.icon}</span>

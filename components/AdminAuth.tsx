@@ -23,7 +23,7 @@ export default function AdminAuth() {
 
   if (isAdmin) {
     return (
-      <div className="flex items-center gap-3 p-3 bg-gold-500/10 border border-gold-500/30 rounded-xl">
+      <div className="flex items-center gap-3 p-3 bg-gold-400/10 border border-gold-400/30 rounded-xl">
         <span className="text-gold-400 text-sm font-semibold">🔑 Admin Mode Active</span>
         <button
           onClick={logoutAdmin}
@@ -40,14 +40,14 @@ export default function AdminAuth() {
       {!open ? (
         <button
           onClick={() => setOpen(true)}
-          className="text-xs text-green-600 hover:text-green-400 underline"
+          className="text-xs text-slate-500 hover:text-slate-300 underline"
         >
           Admin login
         </button>
       ) : (
         <form
           onSubmit={handleSubmit}
-          className="flex items-center gap-2 p-3 bg-forest-800 border border-forest-600 rounded-xl"
+          className="flex items-center gap-2 p-3 bg-navy-800 border border-navy-600 rounded-xl"
         >
           <input
             type="password"
@@ -63,7 +63,7 @@ export default function AdminAuth() {
           <button
             type="button"
             onClick={() => { setOpen(false); setError(false); setPassword('') }}
-            className="text-green-500 hover:text-green-300 text-sm px-1"
+            className="text-slate-400 hover:text-slate-200 text-sm px-1"
           >
             ✕
           </button>

@@ -3,13 +3,8 @@
 export interface Player {
   id: string
   name: string
-  nickname: string
+  initials: string
   handicap: number
-  hometown: string
-  emoji: string
-  wins: number
-  trips: number
-  bio: string
 }
 
 export interface Course {
@@ -68,94 +63,31 @@ export interface ItineraryDay {
 // ─── Players ──────────────────────────────────────────────────────────────────
 
 export const PLAYERS: Player[] = [
-  {
-    id: 'p1',
-    name: 'Max Riemer',
-    nickname: 'Riems',
-    handicap: 14,
-    hometown: 'Raleigh, NC',
-    emoji: '🏌️',
-    wins: 1,
-    trips: 3,
-    bio: 'Steady off the tee, chaos on the greens. Founder of the Wheelbarrow tradition.',
-  },
-  {
-    id: 'p2',
-    name: 'Jake Powell',
-    nickname: 'JP',
-    handicap: 8,
-    hometown: 'Charlotte, NC',
-    emoji: '🎯',
-    wins: 2,
-    trips: 3,
-    bio: 'Surgically precise iron play. Has never once replaced a divot.',
-  },
-  {
-    id: 'p3',
-    name: 'Chris Davis',
-    nickname: 'Shooter',
-    handicap: 18,
-    hometown: 'Nashville, TN',
-    emoji: '🍺',
-    wins: 0,
-    trips: 2,
-    bio: 'Better at the 19th hole than the other 18. Somehow always has a beer in hand.',
-  },
-  {
-    id: 'p4',
-    name: 'Mike Thompson',
-    nickname: 'Big Stick',
-    handicap: 22,
-    hometown: 'Atlanta, GA',
-    emoji: '💪',
-    wins: 0,
-    trips: 3,
-    bio: '300-yard drives into the woods. Every. Single. Time. Heart of gold.',
-  },
-  {
-    id: 'p5',
-    name: 'Ryan Smith',
-    nickname: 'Eagle Eye',
-    handicap: 5,
-    hometown: 'Durham, NC',
-    emoji: '🦅',
-    wins: 3,
-    trips: 3,
-    bio: 'Three-time champion. Annoyingly consistent. Brings his own yardage book.',
-  },
-  {
-    id: 'p6',
-    name: 'Tyler Brown',
-    nickname: 'T-Bone',
-    handicap: 12,
-    hometown: 'Chapel Hill, NC',
-    emoji: '🔥',
-    wins: 1,
-    trips: 2,
-    bio: 'Goes hot or cold. When he\'s on, he\'s dangerous. When he\'s off... pray for him.',
-  },
-  {
-    id: 'p7',
-    name: 'Will Wilson',
-    nickname: 'Bogey Man',
-    handicap: 20,
-    hometown: 'Richmond, VA',
-    emoji: '👻',
-    wins: 0,
-    trips: 1,
-    bio: 'Rookie of the group. Plays better than his handicap suggests. Has no idea what he\'s doing.',
-  },
-  {
-    id: 'p8',
-    name: 'Sam Anderson',
-    nickname: 'The Beast',
-    handicap: 3,
-    hometown: 'Greensboro, NC',
-    emoji: '🐉',
-    wins: 2,
-    trips: 3,
-    bio: 'Scratch golfer energy on a 3 handicap. Sandbagging allegations remain unconfirmed.',
-  },
+  { id: 'p1',  name: 'Max Riemer',          initials: 'MR', handicap: 0 },
+  { id: 'p2',  name: 'John Rhodes',          initials: 'JR', handicap: 0 },
+  { id: 'p3',  name: 'Alex Butler',          initials: 'AB', handicap: 0 },
+  { id: 'p4',  name: 'Tomas Frick',          initials: 'TF', handicap: 0 },
+  { id: 'p5',  name: 'Mac Horvath',          initials: 'MH', handicap: 0 },
+  { id: 'p6',  name: 'Will Sandy',           initials: 'WS', handicap: 0 },
+  { id: 'p7',  name: 'Johnny Castagnozzi',   initials: 'JC', handicap: 0 },
+  { id: 'p8',  name: 'Patrick Alvarez',      initials: 'PA', handicap: 0 },
+  { id: 'p9',  name: 'Alberto Osuna',        initials: 'AO', handicap: 0 },
+  { id: 'p10', name: 'Brandon Eike',         initials: 'BE', handicap: 0 },
+  { id: 'p11', name: 'Danny Serretti',       initials: 'DS', handicap: 0 },
+  { id: 'p12', name: 'Cooper Kinney',        initials: 'CK', handicap: 0 },
+  { id: 'p13', name: 'Hayes Wilson',         initials: 'HW', handicap: 0 },
+  { id: 'p14', name: 'Kris Bowman',          initials: 'KB', handicap: 0 },
+  { id: 'p15', name: 'Davis Palermo',        initials: 'DP', handicap: 0 },
+  { id: 'p16', name: 'Dylan King',           initials: 'DK', handicap: 0 },
+  { id: 'p17', name: 'Jacob Adkins',         initials: 'JA', handicap: 0 },
+  { id: 'p18', name: 'Isaac Clark',          initials: 'IC', handicap: 0 },
+  { id: 'p19', name: 'Jake Knapp',           initials: 'JK', handicap: 0 },
+  { id: 'p20', name: 'Sam Stewart',          initials: 'SS', handicap: 0 },
+  { id: 'p21', name: 'Shaddon Peavyhouse',   initials: 'SP', handicap: 0 },
+  { id: 'p22', name: 'Shawn Rapp',           initials: 'SR', handicap: 0 },
+  { id: 'p23', name: 'Trent Seibert',        initials: 'TS', handicap: 0 },
+  { id: 'p24', name: 'Carter Edge',          initials: 'CE', handicap: 0 },
+  { id: 'p25', name: 'Vance Honeycutt',      initials: 'VH', handicap: 0 },
 ]
 
 // ─── Courses ──────────────────────────────────────────────────────────────────
@@ -234,45 +166,7 @@ export const ROUNDS: Round[] = [
   },
 ]
 
-// ─── Score Generation ─────────────────────────────────────────────────────────
-
-function seededRng(seed: number): () => number {
-  let s = seed
-  return () => {
-    s = (s * 1664525 + 1013904223) & 0xffffffff
-    return (s >>> 0) / 0xffffffff
-  }
-}
-
-function generateHoleScores(
-  playerId: string,
-  roundNum: number,
-  holePars: number[],
-  handicap: number
-): number[] {
-  const seed =
-    playerId.charCodeAt(1) * 997 + roundNum * 137 + handicap * 31
-  const rng = seededRng(seed)
-
-  return holePars.map((par) => {
-    const r = rng()
-    let score: number
-    if (handicap <= 5) {
-      score =
-        r < 0.08 ? par - 1 : r < 0.50 ? par : r < 0.82 ? par + 1 : par + 2
-    } else if (handicap <= 12) {
-      score =
-        r < 0.04 ? par - 1 : r < 0.32 ? par : r < 0.68 ? par + 1 : r < 0.90 ? par + 2 : par + 3
-    } else if (handicap <= 18) {
-      score =
-        r < 0.02 ? par - 1 : r < 0.20 ? par : r < 0.52 ? par + 1 : r < 0.80 ? par + 2 : par + 3
-    } else {
-      score =
-        r < 0.15 ? par : r < 0.42 ? par + 1 : r < 0.70 ? par + 2 : r < 0.90 ? par + 3 : par + 4
-    }
-    return score
-  })
-}
+// ─── Scorecards ───────────────────────────────────────────────────────────────
 
 export interface Scorecard {
   playerId: string
@@ -282,26 +176,8 @@ export interface Scorecard {
   toPar: number
 }
 
-function buildScorecards(): Scorecard[] {
-  const cards: Scorecard[] = []
-  for (const round of ROUNDS) {
-    const course = COURSES.find((c) => c.id === round.courseId)!
-    for (const player of PLAYERS) {
-      const scores = generateHoleScores(
-        player.id,
-        round.roundNumber,
-        course.holePars,
-        player.handicap
-      )
-      const total = scores.reduce((a, b) => a + b, 0)
-      const toPar = total - course.par
-      cards.push({ playerId: player.id, roundId: round.id, scores, total, toPar })
-    }
-  }
-  return cards
-}
-
-export const SCORECARDS: Scorecard[] = buildScorecards()
+// Empty until scores are entered on-course
+export const SCORECARDS: Scorecard[] = []
 
 // ─── Leaderboard ──────────────────────────────────────────────────────────────
 
@@ -525,39 +401,16 @@ export const ITINERARY: ItineraryDay[] = [
 
 export const DEFAULT_POLLS: Poll[] = [
   {
-    id: 'poll1',
-    question: 'Which weekend works best for next year\'s trip?',
+    id: 'poll_dates_2026',
+    question: 'When should we play the 2026 Wheelbarrow Invitational?',
     type: 'dates',
     isOpen: true,
-    createdAt: '2026-03-01',
+    createdAt: '2026-03-27',
     options: [
-      { id: 'o1', text: 'October 8–11, 2026', votes: ['Max Riemer', 'Jake Powell', 'Ryan Smith', 'Sam Anderson'] },
-      { id: 'o2', text: 'October 15–18, 2026', votes: ['Chris Davis', 'Mike Thompson'] },
-      { id: 'o3', text: 'November 5–8, 2026', votes: ['Tyler Brown', 'Will Wilson'] },
-    ],
-  },
-  {
-    id: 'poll2',
-    question: 'Which 4th course should we add as an alternate?',
-    type: 'courses',
-    isOpen: true,
-    createdAt: '2026-03-05',
-    options: [
-      { id: 'o4', text: 'Pinehurst No. 4', votes: ['Sam Anderson', 'Ryan Smith', 'Jake Powell'] },
-      { id: 'o5', text: 'Dormie Club', votes: ['Max Riemer', 'Tyler Brown'] },
-      { id: 'o6', text: 'Pine Needles', votes: ['Chris Davis', 'Will Wilson', 'Mike Thompson'] },
-    ],
-  },
-  {
-    id: 'poll3',
-    question: 'What format should we use for scoring?',
-    type: 'general',
-    isOpen: false,
-    createdAt: '2026-02-20',
-    options: [
-      { id: 'o7', text: 'Stroke play (individual)', votes: ['Sam Anderson', 'Ryan Smith', 'Jake Powell', 'Max Riemer', 'Tyler Brown'] },
-      { id: 'o8', text: 'Stableford points', votes: ['Chris Davis', 'Will Wilson'] },
-      { id: 'o9', text: 'Match play (partners)', votes: ['Mike Thompson'] },
+      { id: 'opt_oct8',  text: 'Oct 8–11',  votes: [] },
+      { id: 'opt_oct15', text: 'Oct 15–18', votes: [] },
+      { id: 'opt_nov5',  text: 'Nov 5–8',   votes: [] },
+      { id: 'opt_nov12', text: 'Nov 12–15', votes: [] },
     ],
   },
 ]

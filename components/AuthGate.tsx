@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useAuth } from '@/context/AuthContext'
+import WheelbarrowLogo from './WheelbarrowLogo'
 
 export default function AuthGate({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, login } = useAuth()
@@ -23,21 +24,21 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   if (isAuthenticated) return <>{children}</>
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-forest-950">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 bg-navy-950">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-green-700/10 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gold-400/5 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-carolina-500/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="text-6xl mb-4">⛳</div>
+          <WheelbarrowLogo className="w-16 h-[74px] text-gold-400 mx-auto mb-4" />
           <h1 className="text-3xl font-serif text-gold-400 font-bold text-shadow-gold">
             Wheelbarrow Invitational
           </h1>
-          <p className="text-green-400 mt-2 text-sm">Members only. You know the drill.</p>
+          <p className="text-slate-400 mt-2 text-sm">Members only. You know the drill.</p>
         </div>
 
         {/* Card */}
@@ -49,7 +50,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
               : {}
           }
         >
-          <h2 className="text-lg font-semibold text-green-100 mb-4 text-center">
+          <h2 className="text-lg font-semibold text-slate-100 mb-4 text-center">
             Enter the password
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -78,7 +79,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
           </form>
         </div>
 
-        <p className="text-center text-green-700 text-xs mt-6">
+        <p className="text-center text-slate-600 text-xs mt-6">
           Pinehurst, NC • October 2026
         </p>
       </div>
