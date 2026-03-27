@@ -88,6 +88,7 @@ export const PLAYERS: Player[] = [
   { id: 'p23', name: 'Trent Seibert',        initials: 'TS', handicap: 0 },
   { id: 'p24', name: 'Carter Edge',          initials: 'CE', handicap: 0 },
   { id: 'p25', name: 'Vance Honeycutt',      initials: 'VH', handicap: 0 },
+  { id: 'p26', name: 'Saxon Stroud',         initials: 'SS', handicap: 0 },
 ]
 
 // ─── Courses ──────────────────────────────────────────────────────────────────
