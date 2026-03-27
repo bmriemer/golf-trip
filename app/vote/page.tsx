@@ -5,6 +5,7 @@ import { DEFAULT_POLLS, PLAYERS, Poll, PollOption } from '@/lib/data'
 
 const PLAYER_NAMES = PLAYERS.map((p) => p.name)
 const VOTES_KEY = 'wheelbarrow_votes'
+const ADMIN_PASSWORD = 'Olemisstarheels54!'
 
 function loadPoll(): Poll {
   if (typeof window === 'undefined') return DEFAULT_POLLS[0]
@@ -12,7 +13,6 @@ function loadPoll(): Poll {
     const saved = localStorage.getItem(VOTES_KEY)
     if (saved) {
       const parsed = JSON.parse(saved)
-      // Find this specific poll by id, fall back to default
       const found = Array.isArray(parsed)
         ? parsed.find((p: Poll) => p.id === DEFAULT_POLLS[0].id)
         : null
@@ -56,21 +56,70 @@ function BarChart({ options, total }: { options: PollOption[]; total: number }) 
                 )}
               </div>
             </div>
-            {opt.votes.length > 0 && (
-              <div className="flex flex-wrap gap-1 mt-1.5">
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+function AdminPanel({ poll, onUpdate }: { poll: Poll; onUpdate: (p: Poll) => void }) {
+  function togglePoll() {
+    const updated = { ...poll, isOpen: !poll.isOpen }
+    onUpdate(updated)
+    savePoll(updated)
+  }
+
+  const total = poll.options.reduce((sum, o) => sum + o.votes.length, 0)
+
+  return (
+    <div className="mt-8 border border-gold-400/30 rounded-2xl p-5 bg-gold-400/5">
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-xs font-bold text-gold-400 uppercase tracking-widest">
+          Admin View
+        </span>
+        <button
+          onClick={togglePoll}
+          className={`text-xs px-3 py-1.5 rounded-lg border font-semibold transition-colors ${
+            poll.isOpen
+              ? 'border-red-500/50 text-red-400 hover:bg-red-500/10'
+              : 'border-carolina-500/50 text-carolina-400 hover:bg-carolina-500/10'
+          }`}
+        >
+          {poll.isOpen ? 'Close Poll' : 'Reopen Poll'}
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        {poll.options.map((opt) => (
+          <div key={opt.id} className="bg-navy-800 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-semibold text-slate-100">{opt.text}</span>
+              <span className="text-xs text-gold-400 font-bold tabular-nums">
+                {opt.votes.length} / {total}
+              </span>
+            </div>
+            {opt.votes.length === 0 ? (
+              <p className="text-xs text-slate-600 italic">No votes yet</p>
+            ) : (
+              <div className="flex flex-wrap gap-1.5">
                 {opt.votes.map((voter) => (
                   <span
                     key={voter}
-                    className="text-[10px] bg-navy-800 text-slate-400 px-2 py-0.5 rounded-full border border-navy-700"
+                    className="text-xs bg-navy-700 border border-navy-600 text-slate-300 px-2.5 py-1 rounded-full"
                   >
-                    {voter.split(' ')[0]}
+                    {voter}
                   </span>
                 ))}
               </div>
             )}
           </div>
-        )
-      })}
+        ))}
+      </div>
+
+      {total === 0 && (
+        <p className="text-xs text-slate-600 text-center mt-4">No votes cast yet.</p>
+      )}
     </div>
   )
 }
@@ -80,6 +129,10 @@ export default function VotePage() {
   const [mounted, setMounted] = useState(false)
   const [selectedVoter, setSelectedVoter] = useState('')
   const [toast, setToast] = useState<string | null>(null)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false)
+  const [passwordInput, setPasswordInput] = useState('')
+  const [passwordError, setPasswordError] = useState(false)
 
   useEffect(() => {
     setPoll(loadPoll())
@@ -92,6 +145,10 @@ export default function VotePage() {
   }
 
   function castVote(optionId: string) {
+    if (!poll.isOpen) {
+      showToast('This poll is closed')
+      return
+    }
     if (!selectedVoter) {
       showToast('Select your name first')
       return
@@ -109,6 +166,18 @@ export default function VotePage() {
     showToast('Vote recorded!')
   }
 
+  function submitPassword() {
+    if (passwordInput === ADMIN_PASSWORD) {
+      setIsAdmin(true)
+      setShowPasswordPrompt(false)
+      setPasswordInput('')
+      setPasswordError(false)
+    } else {
+      setPasswordError(true)
+      setPasswordInput('')
+    }
+  }
+
   if (!mounted) return null
 
   const total = poll.options.reduce((sum, o) => sum + o.votes.length, 0)
@@ -123,10 +192,71 @@ export default function VotePage() {
         </div>
       )}
 
-      <h1 className="section-title mb-1">Vote</h1>
+      {/* Password prompt modal */}
+      {showPasswordPrompt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/80 backdrop-blur-sm px-4">
+          <div className="bg-navy-900 border border-navy-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="font-serif font-bold text-slate-100 text-lg mb-1">Admin Access</h3>
+            <p className="text-slate-500 text-sm mb-4">Enter the admin password to continue.</p>
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false) }}
+              onKeyDown={(e) => e.key === 'Enter' && submitPassword()}
+              placeholder="Password"
+              autoFocus
+              className={`input mb-1 ${passwordError ? 'border-red-500' : ''}`}
+            />
+            {passwordError && (
+              <p className="text-red-400 text-xs mb-3">Incorrect password.</p>
+            )}
+            {!passwordError && <div className="mb-3" />}
+            <div className="flex gap-2">
+              <button
+                onClick={() => { setShowPasswordPrompt(false); setPasswordInput(''); setPasswordError(false) }}
+                className="flex-1 px-4 py-2 rounded-xl border border-navy-600 text-slate-400 text-sm hover:bg-navy-800 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={submitPassword}
+                className="flex-1 px-4 py-2 rounded-xl bg-gold-400 text-navy-950 text-sm font-bold hover:bg-gold-300 transition-colors"
+              >
+                Enter
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="section-title">Vote</h1>
+        {isAdmin ? (
+          <button
+            onClick={() => setIsAdmin(false)}
+            className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+          >
+            Exit Admin
+          </button>
+        ) : (
+          <button
+            onClick={() => setShowPasswordPrompt(true)}
+            className="text-xs text-slate-600 hover:text-slate-400 transition-colors"
+          >
+            Admin
+          </button>
+        )}
+      </div>
       <p className="text-slate-500 text-sm mb-8">{total} vote{total !== 1 ? 's' : ''} cast</p>
 
       <div className="card">
+        {/* Poll status badge */}
+        {!poll.isOpen && (
+          <div className="mb-4 text-xs text-center text-red-400 border border-red-500/30 bg-red-500/10 rounded-lg py-1.5">
+            This poll is closed
+          </div>
+        )}
+
         {/* Question */}
         <h2 className="font-serif font-bold text-slate-100 text-lg leading-snug mb-6">
           {poll.question}
@@ -157,7 +287,7 @@ export default function VotePage() {
               <button
                 key={opt.id}
                 onClick={() => castVote(opt.id)}
-                disabled={!selectedVoter}
+                disabled={!selectedVoter || !poll.isOpen}
                 className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
                   isMyPick
                     ? 'bg-gold-400/20 border-gold-400 text-gold-300'
@@ -165,9 +295,7 @@ export default function VotePage() {
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  {isMyPick && (
-                    <span className="text-gold-400 font-bold">✓</span>
-                  )}
+                  {isMyPick && <span className="text-gold-400 font-bold">✓</span>}
                   {opt.text}
                 </span>
               </button>
@@ -178,12 +306,17 @@ export default function VotePage() {
         {/* Results */}
         <BarChart options={poll.options} total={total} />
 
-        {total > 0 && (
+        {total > 0 && poll.isOpen && (
           <p className="text-xs text-slate-600 mt-5 text-center">
             You can change your vote at any time.
           </p>
         )}
       </div>
+
+      {/* Admin panel */}
+      {isAdmin && (
+        <AdminPanel poll={poll} onUpdate={setPoll} />
+      )}
     </div>
   )
 }
