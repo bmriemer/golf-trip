@@ -3,9 +3,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { PLAYERS } from '@/lib/data'
 import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/context/AuthContext'
 
 const PLAYER_NAMES = PLAYERS.map((p) => p.name)
-const ADMIN_PASSWORD = 'Olemisstarheels54!'
 
 const POLL_ID = 'poll_dates_2026'
 
@@ -154,11 +154,8 @@ export default function VotePage() {
   const [loading, setLoading] = useState(true)
   const [selectedVoter, setSelectedVoter] = useState('')
   const [toast, setToast] = useState<string | null>(null)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false)
-  const [passwordInput, setPasswordInput] = useState('')
-  const [passwordError, setPasswordError] = useState(false)
   const [voting, setVoting] = useState(false)
+  const { isAdmin } = useAuth()
 
   function showToast(msg: string) {
     setToast(msg)
@@ -260,18 +257,6 @@ export default function VotePage() {
     setPoll({ ...poll, is_open: newOpen })
   }
 
-  function submitPassword() {
-    if (passwordInput === ADMIN_PASSWORD) {
-      setIsAdmin(true)
-      setShowPasswordPrompt(false)
-      setPasswordInput('')
-      setPasswordError(false)
-    } else {
-      setPasswordError(true)
-      setPasswordInput('')
-    }
-  }
-
   if (loading) {
     return (
       <div className="max-w-xl mx-auto px-4 py-6 md:py-12 text-center">
@@ -300,53 +285,7 @@ export default function VotePage() {
         </div>
       )}
 
-      {/* Password prompt modal */}
-      {showPasswordPrompt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy-950/80 backdrop-blur-sm px-4">
-          <div className="bg-navy-900 border border-navy-700 rounded-2xl p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="font-serif font-bold text-slate-100 text-lg mb-1">Admin Access</h3>
-            <p className="text-slate-500 text-sm mb-4">Enter the admin password to continue.</p>
-            <input
-              type="password"
-              value={passwordInput}
-              onChange={(e) => { setPasswordInput(e.target.value); setPasswordError(false) }}
-              onKeyDown={(e) => e.key === 'Enter' && submitPassword()}
-              placeholder="Password"
-              autoFocus
-              className={`input mb-1 ${passwordError ? 'border-red-500' : ''}`}
-            />
-            {passwordError && <p className="text-red-400 text-xs mb-3">Incorrect password.</p>}
-            {!passwordError && <div className="mb-3" />}
-            <div className="flex gap-2">
-              <button
-                onClick={() => { setShowPasswordPrompt(false); setPasswordInput(''); setPasswordError(false) }}
-                className="flex-1 px-4 py-2 rounded-xl border border-navy-600 text-slate-400 text-sm hover:bg-navy-800 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={submitPassword}
-                className="flex-1 px-4 py-2 rounded-xl bg-gold-400 text-navy-950 text-sm font-bold hover:bg-gold-300 transition-colors"
-              >
-                Enter
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div className="flex items-center justify-between mb-1">
-        <h1 className="section-title">Vote</h1>
-        {isAdmin ? (
-          <button onClick={() => setIsAdmin(false)} className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
-            Exit Admin
-          </button>
-        ) : (
-          <button onClick={() => setShowPasswordPrompt(true)} className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
-            Admin
-          </button>
-        )}
-      </div>
+      <h1 className="section-title mb-1">Vote</h1>
       <p className="text-slate-500 text-sm mb-8">{total} vote{total !== 1 ? 's' : ''} cast</p>
 
       <div className="card">
