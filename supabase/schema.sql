@@ -104,6 +104,7 @@ create policy "Public read" on votes for select using (true);
 
 -- Allow inserts for votes (authenticated via app password)
 create policy "Allow vote insert" on votes for insert with check (true);
+create policy "Allow vote delete" on votes for delete using (true);
 create policy "Allow scorecard insert" on scorecards for insert with check (true);
 create policy "Allow scorecard update" on scorecards for update using (true);
 
