@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import WheelbarrowLogo from '@/components/WheelbarrowLogo'
+import CountdownTimer from '@/components/CountdownTimer'
 import { PLAYERS } from '@/lib/data'
 
 const QUICK_LINKS = [
@@ -22,27 +23,20 @@ export default function HomePage() {
           <br />
           <span className="text-3xl md:text-5xl">Invitational</span>
         </h1>
+        <p className="text-carolina-400 text-base md:text-lg mt-3">
+          October 8–11, 2026 · World Golf Village, St. Augustine, FL
+        </p>
       </section>
 
       {/* Countdown */}
-      <section className="mb-8 md:mb-12">
-        <div className="border border-gold-400/40 rounded-2xl bg-navy-900 px-6 py-8 text-center">
-          <div className="text-gold-400 text-xs font-semibold uppercase tracking-widest mb-4">
-            Dates To Be Determined
-          </div>
-          <p className="text-slate-200 font-serif text-xl font-semibold leading-snug mb-2">
-            Dates TBD
-          </p>
-          <p className="text-slate-400 text-sm">
-            Check back once the votes are in — the field will decide.
-          </p>
-          <a
-            href="/vote"
-            className="inline-block mt-5 px-5 py-2 rounded-xl border border-gold-400/50 text-gold-400 text-sm font-semibold hover:bg-gold-400/10 transition-colors"
-          >
-            Cast Your Vote →
-          </a>
-        </div>
+      <section className="card mb-8 md:mb-12">
+        <h2 className="text-center text-gold-400 text-sm font-semibold uppercase tracking-widest mb-5">
+          Countdown to Tee-Off
+        </h2>
+        <CountdownTimer />
+        <p className="text-center text-slate-600 text-xs mt-5">
+          October 8–11, 2026 · World Golf Village, St. Augustine, FL
+        </p>
       </section>
 
       {/* Quick Links */}

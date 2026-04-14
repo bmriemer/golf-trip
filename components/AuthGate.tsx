@@ -80,7 +80,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
         </div>
 
         <p className="text-center text-slate-600 text-xs mt-6">
-          Pinehurst, NC • October 2026
+          World Golf Village, St. Augustine, FL • October 2026
         </p>
       </div>
 

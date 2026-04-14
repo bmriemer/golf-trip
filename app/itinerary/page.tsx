@@ -17,18 +17,20 @@ const EVENT_DOT = {
 const DAYS = [
   {
     dayOfWeek: 'Wednesday',
+    date: 'October 7',
     dayLabel: 'Travel Day',
     events: [
       {
         time: 'All Day',
         title: 'Travel Day',
-        description: 'Details TBD — check back once logistics are confirmed.',
+        description: 'Make your way to World Golf Village, St. Augustine, FL. Details TBD — check back once logistics are confirmed.',
         type: 'travel' as const,
       },
     ],
   },
   {
     dayOfWeek: 'Thursday',
+    date: 'October 8',
     dayLabel: 'Round 1',
     events: [
       {
@@ -41,6 +43,7 @@ const DAYS = [
   },
   {
     dayOfWeek: 'Friday',
+    date: 'October 9',
     dayLabel: 'Round 2',
     events: [
       {
@@ -53,6 +56,7 @@ const DAYS = [
   },
   {
     dayOfWeek: 'Saturday',
+    date: 'October 10',
     dayLabel: 'Round 3',
     events: [
       {
@@ -70,7 +74,7 @@ export default function ItineraryPage() {
     <div className="max-w-3xl mx-auto px-4 py-6 md:py-10 animate-fade-in">
       <h1 className="section-title mb-1">Trip Itinerary</h1>
       <p className="text-slate-400 text-sm mb-8">
-        Details coming soon — check back once dates and courses are confirmed.
+        October 7–10, 2026 · World Golf Village, St. Augustine, FL
       </p>
 
       {/* Days */}
@@ -82,7 +86,10 @@ export default function ItineraryPage() {
               <div className="bg-gold-400 text-navy-950 rounded-xl px-3 py-1 text-sm font-bold">
                 {day.dayOfWeek}
               </div>
-              <div className="font-serif font-bold text-slate-100">{day.dayLabel}</div>
+              <div>
+                <div className="font-serif font-bold text-slate-100">{day.dayLabel}</div>
+                <div className="text-xs text-slate-500">{day.date}, 2026</div>
+              </div>
             </div>
 
             {/* Timeline */}
@@ -110,7 +117,7 @@ export default function ItineraryPage() {
       {/* Footer note */}
       <div className="mt-10 card text-center">
         <p className="text-slate-400 text-sm">
-          Schedule subject to change. Details will be updated once dates and courses are confirmed.
+          Courses and tee times coming soon. Check back once the lineup is confirmed.
         </p>
       </div>
     </div>

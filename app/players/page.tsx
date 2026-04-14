@@ -5,7 +5,7 @@ export default function PlayersPage() {
     <div className="max-w-5xl mx-auto px-4 py-6 md:py-10 animate-fade-in">
       <h1 className="section-title mb-1">The Field</h1>
       <p className="text-slate-400 text-sm mb-8">
-        {PLAYERS.length} competitors · Pinehurst, NC · October 2026
+        {PLAYERS.length} competitors · World Golf Village, St. Augustine, FL · October 2026
       </p>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">

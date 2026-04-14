@@ -417,5 +417,5 @@ export const DEFAULT_POLLS: Poll[] = [
   },
 ]
 
-export const TRIP_START_DATE = new Date('2026-10-08T12:00:00')
+export const TRIP_START_DATE = new Date('2026-10-08T08:00:00')
 export const HOTEL_LINK = 'https://www.pinehurst.com/lodging/carolina-hotel/'

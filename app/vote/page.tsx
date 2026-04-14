@@ -288,10 +288,19 @@ export default function VotePage() {
       <h1 className="section-title mb-1">Vote</h1>
       <p className="text-slate-500 text-sm mb-8">{total} vote{total !== 1 ? 's' : ''} cast</p>
 
+      {/* Winner banner */}
+      {!poll.is_open && (
+        <div className="mb-6 border border-gold-400/50 bg-gold-400/10 rounded-2xl px-5 py-4 text-center">
+          <div className="text-gold-400 text-xs font-bold uppercase tracking-widest mb-1">Dates Confirmed</div>
+          <div className="text-gold-300 font-serif font-bold text-2xl">Oct 8–11, 2026</div>
+          <div className="text-slate-400 text-sm mt-1">World Golf Village, St. Augustine, FL — it&apos;s on.</div>
+        </div>
+      )}
+
       <div className="card">
         {!poll.is_open && (
-          <div className="mb-4 text-xs text-center text-red-400 border border-red-500/30 bg-red-500/10 rounded-lg py-1.5">
-            This poll is closed
+          <div className="mb-4 text-xs text-center text-slate-500 border border-navy-700 bg-navy-800 rounded-lg py-1.5">
+            Voting closed
           </div>
         )}
 
@@ -299,49 +308,36 @@ export default function VotePage() {
           {poll.question}
         </h2>
 
-        {/* Name selector */}
-        <div className="mb-5">
-          <label className="text-xs text-slate-400 font-semibold uppercase tracking-wider mb-2 block">
-            Your name
-          </label>
-          <select
-            value={selectedVoter}
-            onChange={(e) => setSelectedVoter(e.target.value)}
-            className="input"
-          >
-            <option value="">Select your name...</option>
-            {PLAYER_NAMES.map((name) => (
-              <option key={name} value={name}>{name}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Vote options */}
+        {/* Vote options — read-only when closed */}
         <div className="space-y-2">
           {options.map((opt) => {
-            const isMyPick = myVoteOptionId === opt.id
+            const isWinner = !poll.is_open && opt.id === 'opt_oct8'
+            const count = votes.filter((v) => v.option_id === opt.id).length
+            const pct = total > 0 ? Math.round((count / total) * 100) : 0
             return (
-              <button
+              <div
                 key={opt.id}
-                onClick={() => castVote(opt.id)}
-                disabled={!selectedVoter || !poll.is_open || voting}
-                className={`w-full text-left px-4 py-3 rounded-xl border text-sm font-medium transition-all duration-200 ${
-                  isMyPick
+                className={`w-full px-4 py-3 rounded-xl border text-sm font-medium ${
+                  isWinner
                     ? 'bg-gold-400/20 border-gold-400 text-gold-300'
-                    : 'bg-navy-800 border-navy-600 text-slate-200 hover:border-gold-400/50 hover:bg-navy-700 disabled:opacity-40 disabled:cursor-not-allowed'
+                    : 'bg-navy-800 border-navy-600 text-slate-400'
                 }`}
               >
-                <span className="flex items-center gap-2">
-                  {isMyPick && <span className="text-gold-400 font-bold">✓</span>}
-                  {opt.text}
-                </span>
-              </button>
+                <div className="flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    {isWinner && <span className="text-gold-400 font-bold">✓</span>}
+                    {opt.text}
+                    {isWinner && <span className="text-xs text-gold-500 font-semibold">Winner</span>}
+                  </span>
+                  <span className="text-xs tabular-nums opacity-60">{count} vote{count !== 1 ? 's' : ''} · {pct}%</span>
+                </div>
+              </div>
             )
           })}
         </div>
 
-        {/* Bar chart (counts only — no names) */}
-        <BarChart options={options} votes={votes} />
+        {/* Bar chart (counts only — no names) — only show when open */}
+        {poll.is_open && <BarChart options={options} votes={votes} />}
 
         {total > 0 && poll.is_open && (
           <p className="text-xs text-slate-600 mt-5 text-center">
