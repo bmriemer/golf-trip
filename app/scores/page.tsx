@@ -1,15 +1,173 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { PLAYERS } from '@/lib/data'
 import { useAuth } from '@/context/AuthContext'
 import AdminAuth from '@/components/AdminAuth'
 
+const MANUAL_STATS_KEY = 'wheelbarrow_manual_stats'
+
 type Tab = 'leaderboard' | 'teams' | 'stats'
+
+interface ManualStats {
+  closestToPin: { winner: string; note: string }
+  longestDrive: { winner: string; note: string }
+}
+
+const DEFAULT_MANUAL: ManualStats = {
+  closestToPin: { winner: '', note: '' },
+  longestDrive: { winner: '', note: '' },
+}
+
+function loadManualStats(): ManualStats {
+  if (typeof window === 'undefined') return DEFAULT_MANUAL
+  try {
+    const saved = localStorage.getItem(MANUAL_STATS_KEY)
+    return saved ? { ...DEFAULT_MANUAL, ...JSON.parse(saved) } : DEFAULT_MANUAL
+  } catch {
+    return DEFAULT_MANUAL
+  }
+}
+
+function saveManualStats(stats: ManualStats) {
+  try {
+    localStorage.setItem(MANUAL_STATS_KEY, JSON.stringify(stats))
+  } catch {}
+}
+
+// ─── Stat card ─────────────────────────────────────────────────────────────────
+
+function StatCard({
+  icon,
+  label,
+  value,
+  sub,
+  highlight = false,
+}: {
+  icon: string
+  label: string
+  value: string
+  sub?: string
+  highlight?: boolean
+}) {
+  return (
+    <div className={`card flex flex-col gap-2 ${highlight ? 'border-gold-400/40' : ''}`}>
+      <div className="text-2xl">{icon}</div>
+      <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider">{label}</div>
+      <div className={`font-serif font-bold text-lg leading-snug ${value === 'TBD' ? 'text-slate-600' : 'text-gold-400'}`}>
+        {value}
+      </div>
+      {sub && <div className="text-xs text-slate-500">{sub}</div>}
+    </div>
+  )
+}
+
+// ─── Manual stat card (admin-editable) ────────────────────────────────────────
+
+function ManualStatCard({
+  icon,
+  label,
+  winner,
+  note,
+  isAdmin,
+  onSave,
+}: {
+  icon: string
+  label: string
+  winner: string
+  note: string
+  isAdmin: boolean
+  onSave: (winner: string, note: string) => void
+}) {
+  const [editing, setEditing] = useState(false)
+  const [draftWinner, setDraftWinner] = useState(winner)
+  const [draftNote, setDraftNote] = useState(note)
+
+  const hasValue = winner.trim() !== ''
+
+  function handleSave() {
+    onSave(draftWinner, draftNote)
+    setEditing(false)
+  }
+
+  return (
+    <div className={`card flex flex-col gap-2 ${hasValue ? 'border-gold-400/40' : ''}`}>
+      <div className="text-2xl">{icon}</div>
+      <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider">{label}</div>
+
+      {editing ? (
+        <div className="space-y-2 mt-1">
+          <input
+            type="text"
+            value={draftWinner}
+            onChange={(e) => setDraftWinner(e.target.value)}
+            placeholder="Player name"
+            className="input text-sm py-1.5"
+          />
+          <input
+            type="text"
+            value={draftNote}
+            onChange={(e) => setDraftNote(e.target.value)}
+            placeholder="Note (e.g. Hole 7, 4 feet)"
+            className="input text-sm py-1.5"
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={handleSave}
+              className="flex-1 px-3 py-1.5 rounded-lg bg-gold-400 text-navy-950 text-xs font-bold hover:bg-gold-300 transition-colors"
+            >
+              Save
+            </button>
+            <button
+              onClick={() => { setEditing(false); setDraftWinner(winner); setDraftNote(note) }}
+              className="px-3 py-1.5 rounded-lg border border-navy-600 text-slate-400 text-xs hover:bg-navy-800 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ) : (
+        <>
+          <div className={`font-serif font-bold text-lg leading-snug ${hasValue ? 'text-gold-400' : 'text-slate-600'}`}>
+            {hasValue ? winner : 'TBD'}
+          </div>
+          {hasValue && note && <div className="text-xs text-slate-500">{note}</div>}
+          {isAdmin && (
+            <button
+              onClick={() => setEditing(true)}
+              className="mt-1 text-xs text-slate-600 hover:text-gold-400 transition-colors text-left"
+            >
+              {hasValue ? '✎ Edit' : '+ Enter winner'}
+            </button>
+          )}
+        </>
+      )}
+    </div>
+  )
+}
+
+// ─── Main page ─────────────────────────────────────────────────────────────────
 
 export default function ScoresPage() {
   const [tab, setTab] = useState<Tab>('leaderboard')
+  const [manualStats, setManualStats] = useState<ManualStats>(DEFAULT_MANUAL)
+  const [mounted, setMounted] = useState(false)
   const { isAdmin } = useAuth()
+
+  useEffect(() => {
+    setManualStats(loadManualStats())
+    setMounted(true)
+  }, [])
+
+  function updateManualStat(
+    key: keyof ManualStats,
+    winner: string,
+    note: string
+  ) {
+    const next = { ...manualStats, [key]: { winner, note } }
+    setManualStats(next)
+    saveManualStats(next)
+  }
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
     { id: 'leaderboard', label: 'Individual Leaderboard', icon: '🏆' },
@@ -104,11 +262,55 @@ export default function ScoresPage() {
       )}
 
       {/* ── Stats ─────────────────────────────────────────────────────────── */}
-      {tab === 'stats' && (
-        <div className="animate-slide-up">
-          <div className="card text-center py-12">
-            <p className="text-slate-400 text-sm">Stats will appear once scores are entered.</p>
-            <p className="text-slate-600 text-xs mt-1">Check back after Round 1.</p>
+      {tab === 'stats' && mounted && (
+        <div className="animate-slide-up space-y-6">
+          <p className="text-slate-500 text-xs">Stats update once scores are entered. Check back after Round 1.</p>
+
+          {/* Scoring records */}
+          <div>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Scoring Records</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <StatCard icon="🔥" label="Lowest Round" value="TBD" sub="Player · Score" highlight />
+              <StatCard icon="💀" label="Highest Round" value="TBD" sub="The one to avoid" />
+              <StatCard icon="🏌️" label="Most Birdies — Trip" value="TBD" sub="Player · Total" highlight />
+              <StatCard icon="⚡" label="Most Birdies — Single Round" value="TBD" sub="Player · Count · Round" />
+              <StatCard icon="🦅" label="Most Eagles — Trip" value="TBD" sub="Player · Total" highlight />
+              <StatCard icon="🎯" label="Most Pars in a Row" value="TBD" sub="Player · Count" />
+            </div>
+          </div>
+
+          {/* Performance */}
+          <div>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Performance</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <StatCard icon="📈" label="Biggest Comeback" value="TBD" sub="Most strokes gained R1→R3" highlight />
+              <StatCard icon="🌅" label="Best Front 9" value="TBD" sub="Player · Score" />
+              <StatCard icon="🌇" label="Best Back 9" value="TBD" sub="Player · Score" />
+              <StatCard icon="📐" label="Most Consistent Player" value="TBD" sub="Lowest variance across 3 rounds" highlight />
+            </div>
+          </div>
+
+          {/* Moments — admin-editable */}
+          <div>
+            <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Moments</h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <ManualStatCard
+                icon="📍"
+                label="Closest to Pin"
+                winner={manualStats.closestToPin.winner}
+                note={manualStats.closestToPin.note}
+                isAdmin={isAdmin}
+                onSave={(w, n) => updateManualStat('closestToPin', w, n)}
+              />
+              <ManualStatCard
+                icon="💨"
+                label="Longest Drive"
+                winner={manualStats.longestDrive.winner}
+                note={manualStats.longestDrive.note}
+                isAdmin={isAdmin}
+                onSave={(w, n) => updateManualStat('longestDrive', w, n)}
+              />
+            </div>
           </div>
         </div>
       )}
