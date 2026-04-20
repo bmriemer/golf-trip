@@ -23,7 +23,7 @@ const DAYS = [
       {
         time: 'All Day',
         title: 'Travel Day',
-        description: 'Make your way to World Golf Village, St. Augustine, FL. Details TBD — check back once logistics are confirmed.',
+        description: 'Make your way to World Golf Village, St. Augustine, FL.',
         type: 'travel' as const,
       },
     ],
