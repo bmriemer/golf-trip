@@ -5,15 +5,15 @@ import { PLAYERS } from '@/lib/data'
 import { useAuth } from '@/context/AuthContext'
 import AdminAuth from '@/components/AdminAuth'
 
-type Tab = 'leaderboard' | 'scorecard' | 'stats'
+type Tab = 'leaderboard' | 'teams' | 'stats'
 
 export default function ScoresPage() {
   const [tab, setTab] = useState<Tab>('leaderboard')
   const { isAdmin } = useAuth()
 
   const tabs: { id: Tab; label: string; icon: string }[] = [
-    { id: 'leaderboard', label: 'Leaderboard', icon: '🏆' },
-    { id: 'scorecard', label: 'Scorecards', icon: '📋' },
+    { id: 'leaderboard', label: 'Individual Leaderboard', icon: '🏆' },
+    { id: 'teams', label: 'Team Leaderboard', icon: '🤝' },
     { id: 'stats', label: 'Stats', icon: '📊' },
   ]
 
@@ -93,12 +93,12 @@ export default function ScoresPage() {
         </div>
       )}
 
-      {/* ── Scorecards ────────────────────────────────────────────────────── */}
-      {tab === 'scorecard' && (
+      {/* ── Team Leaderboard ─────────────────────────────────────────────── */}
+      {tab === 'teams' && (
         <div className="animate-slide-up">
           <div className="card text-center py-12">
-            <p className="text-slate-400 text-sm">Scorecards coming soon.</p>
-            <p className="text-slate-600 text-xs mt-1">Check back once rounds are confirmed.</p>
+            <p className="text-slate-400 text-sm">Teams and scoring format coming soon.</p>
+            <p className="text-slate-600 text-xs mt-1">Check back once details are finalized.</p>
           </div>
         </div>
       )}
