@@ -31,12 +31,12 @@ const DAYS = [
   {
     dayOfWeek: 'Thursday',
     date: 'October 8',
-    dayLabel: 'Round 1',
+    dayLabel: 'Round 1 — King & Bear',
     events: [
       {
         time: 'TBD',
-        title: '⛳ Round 1',
-        description: 'Course TBD · Tee time TBD',
+        title: '⛳ Round 1 — King & Bear',
+        description: 'World Golf Village, St. Augustine, FL · Tee time TBD',
         type: 'golf' as const,
       },
     ],
@@ -44,12 +44,12 @@ const DAYS = [
   {
     dayOfWeek: 'Friday',
     date: 'October 9',
-    dayLabel: 'Round 2',
+    dayLabel: 'Round 2 — Slammer & Squire',
     events: [
       {
         time: 'TBD',
-        title: '⛳ Round 2',
-        description: 'Course TBD · Tee time TBD',
+        title: '⛳ Round 2 — Slammer & Squire',
+        description: 'World Golf Village, St. Augustine, FL · Tee time TBD',
         type: 'golf' as const,
       },
     ],
