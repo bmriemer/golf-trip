@@ -8,7 +8,7 @@ const QUICK_LINKS = [
   { href: '/scores', icon: '🏆', label: 'Leaderboard', desc: 'Scores & standings' },
   { href: '/vote', icon: '🗳️', label: 'Vote', desc: 'Active polls' },
   { href: '/players', icon: '👤', label: 'Players', desc: 'Roster & handicaps' },
-  { href: null, icon: '🏨', label: 'Hotel / Airbnb', desc: 'Coming soon', disabled: true },
+  { href: 'https://www.marriott.com/en-us/hotels/jaxbr-world-golf-village-renaissance-st-augustine-resort/overview/', icon: '🏨', label: 'Official Hotel', desc: 'Renaissance St. Augustine', external: true },
 ]
 
 export default function HomePage() {
@@ -43,17 +43,20 @@ export default function HomePage() {
         <h2 className="section-title mb-4">Quick Links</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {QUICK_LINKS.map((link) =>
-            link.disabled ? (
-              <div
+            link.external ? (
+              <a
                 key={link.label}
-                className="card opacity-50 cursor-not-allowed"
+                href={link.href!}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card hover:border-gold-400/50 hover:bg-navy-800 transition-all duration-200 group"
               >
                 <div className="text-2xl mb-2">{link.icon}</div>
-                <div className="font-semibold text-slate-100 text-sm md:text-base">
+                <div className="font-semibold text-slate-100 group-hover:text-gold-400 transition-colors text-sm md:text-base">
                   {link.label}
                 </div>
                 <div className="text-slate-500 text-xs mt-0.5">{link.desc}</div>
-              </div>
+              </a>
             ) : (
               <Link
                 key={link.href}
