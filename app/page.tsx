@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import WheelbarrowLogo from '@/components/WheelbarrowLogo'
 import CountdownTimer from '@/components/CountdownTimer'
-import { PLAYERS } from '@/lib/data'
 
 const QUICK_LINKS = [
   { href: '/itinerary', icon: '📅', label: 'Itinerary', desc: 'Full schedule & tee times' },
@@ -72,25 +71,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Player Cards */}
-      <section>
-        <h2 className="section-title mb-4">The Field — {PLAYERS.length} Players</h2>
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
-          {PLAYERS.map((player) => (
-            <div key={player.id} className="card text-center hover:border-gold-400/40 transition-colors p-3 group">
-              <div className="w-10 h-10 rounded-full bg-navy-800 border border-gold-400/40 flex items-center justify-center mx-auto mb-2 group-hover:border-gold-400 transition-colors">
-                <span className="text-gold-400 font-serif font-bold text-xs">{player.initials}</span>
-              </div>
-              <div className="font-semibold text-slate-100 text-xs leading-tight">{player.name}</div>
-            </div>
-          ))}
-        </div>
-        <div className="text-center mt-4">
-          <Link href="/players" className="btn-outline inline-block">
-            View Full Roster →
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }
