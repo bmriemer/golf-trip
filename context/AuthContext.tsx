@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
 
 const SITE_PASSWORD = 'golfisfun'
-const ADMIN_PASSWORD = 'Olemisstarheels54!'
+const ADMIN_PASSWORD = 'WBI26'
 const AUTH_KEY = 'wheelbarrow_auth'
 const ADMIN_KEY = 'wheelbarrow_admin'
 

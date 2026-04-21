@@ -21,55 +21,5 @@ export default function AdminAuth() {
     }
   }
 
-  if (isAdmin) {
-    return (
-      <div className="flex items-center gap-3 p-3 bg-gold-400/10 border border-gold-400/30 rounded-xl">
-        <span className="text-gold-400 text-sm font-semibold">🔑 Admin Mode Active</span>
-        <button
-          onClick={logoutAdmin}
-          className="ml-auto text-xs text-red-400 hover:text-red-300 underline"
-        >
-          Exit Admin
-        </button>
-      </div>
-    )
-  }
-
-  return (
-    <div>
-      {!open ? (
-        <button
-          onClick={() => setOpen(true)}
-          className="text-xs text-slate-500 hover:text-slate-300 underline"
-        >
-          Admin login
-        </button>
-      ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="flex items-center gap-2 p-3 bg-navy-800 border border-navy-600 rounded-xl"
-        >
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => { setPassword(e.target.value); setError(false) }}
-            placeholder="Admin password..."
-            className={`input flex-1 text-sm py-1.5 ${error ? 'border-red-500' : ''}`}
-            autoFocus
-          />
-          <button type="submit" className="btn-gold py-1.5 px-3 text-sm">
-            Enter
-          </button>
-          <button
-            type="button"
-            onClick={() => { setOpen(false); setError(false); setPassword('') }}
-            className="text-slate-400 hover:text-slate-200 text-sm px-1"
-          >
-            ✕
-          </button>
-          {error && <p className="text-red-400 text-xs">Wrong password</p>}
-        </form>
-      )}
-    </div>
-  )
+  return null
 }
