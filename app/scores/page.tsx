@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PLAYERS } from '@/lib/data'
 import { useAuth } from '@/context/AuthContext'
 import AdminAuth from '@/components/AdminAuth'
+import { supabase } from '@/lib/supabase'
 
 const SCORES_KEY = 'wheelbarrow_scores'
 const MANUAL_STATS_KEY = 'wheelbarrow_manual_stats'
-const CONFIRMED_KEY = 'wheelbarrow_confirmed_players'
 
 // Round metadata (courses confirmed for R1/R2, R3 TBD)
 const ROUNDS = [
@@ -53,14 +53,6 @@ function loadManualStats(): ManualStats {
 
 function saveManualStats(stats: ManualStats) {
   try { localStorage.setItem(MANUAL_STATS_KEY, JSON.stringify(stats)) } catch {}
-}
-
-function loadConfirmed(): Set<string> {
-  if (typeof window === 'undefined') return new Set()
-  try {
-    const saved = localStorage.getItem(CONFIRMED_KEY)
-    return saved ? new Set(JSON.parse(saved)) : new Set()
-  } catch { return new Set() }
 }
 
 // ─── Stat card ─────────────────────────────────────────────────────────────────
@@ -192,12 +184,18 @@ export default function ScoresPage() {
   const [mounted, setMounted] = useState(false)
   const { isAdmin } = useAuth()
 
+  const fetchConfirmed = useCallback(async () => {
+    if (!supabase) return
+    const { data } = await supabase.from('confirmed_players').select('player_id')
+    if (data) setConfirmed(new Set(data.map((r: { player_id: string }) => r.player_id)))
+  }, [])
+
   useEffect(() => {
     setScores(loadScores())
     setManualStats(loadManualStats())
-    setConfirmed(loadConfirmed())
-    setMounted(true)
-  }, [])
+    fetchConfirmed().then(() => setMounted(true))
+    if (!supabase) { setMounted(true); return }
+  }, [fetchConfirmed])
 
   function setScore(playerId: string, roundIndex: number, score: number | null) {
     const playerScores = scores[playerId] ?? [null, null, null]

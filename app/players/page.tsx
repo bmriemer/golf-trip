@@ -1,28 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { PLAYERS } from '@/lib/data'
 import { useAuth } from '@/context/AuthContext'
-
-const CONFIRMED_KEY = 'wheelbarrow_confirmed_players'
+import { supabase } from '@/lib/supabase'
 
 type Tab = 'roster' | 'teams'
-
-function loadConfirmed(): Set<string> {
-  if (typeof window === 'undefined') return new Set()
-  try {
-    const saved = localStorage.getItem(CONFIRMED_KEY)
-    return saved ? new Set(JSON.parse(saved)) : new Set()
-  } catch {
-    return new Set()
-  }
-}
-
-function saveConfirmed(confirmed: Set<string>) {
-  try {
-    localStorage.setItem(CONFIRMED_KEY, JSON.stringify(Array.from(confirmed)))
-  } catch {}
-}
 
 export default function PlayersPage() {
   const [tab, setTab] = useState<Tab>('roster')
@@ -30,20 +13,38 @@ export default function PlayersPage() {
   const [mounted, setMounted] = useState(false)
   const { isAdmin } = useAuth()
 
-  useEffect(() => {
-    setConfirmed(loadConfirmed())
-    setMounted(true)
+  const fetchConfirmed = useCallback(async () => {
+    if (!supabase) return
+    const { data } = await supabase.from('confirmed_players').select('player_id')
+    if (data) setConfirmed(new Set(data.map((r: { player_id: string }) => r.player_id)))
   }, [])
 
-  function toggleConfirmed(playerId: string) {
-    const next = new Set(confirmed)
-    if (next.has(playerId)) {
-      next.delete(playerId)
-    } else {
-      next.add(playerId)
+  useEffect(() => {
+    fetchConfirmed().then(() => setMounted(true))
+
+    if (!supabase) {
+      setMounted(true)
+      return
     }
-    setConfirmed(next)
-    saveConfirmed(next)
+
+    const channel = supabase
+      .channel('confirmed-players-realtime')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'confirmed_players' }, () => {
+        fetchConfirmed()
+      })
+      .subscribe()
+
+    return () => { supabase!.removeChannel(channel) }
+  }, [fetchConfirmed])
+
+  async function toggleConfirmed(playerId: string) {
+    if (!supabase) return
+    if (confirmed.has(playerId)) {
+      await supabase.from('confirmed_players').delete().eq('player_id', playerId)
+    } else {
+      await supabase.from('confirmed_players').insert({ player_id: playerId })
+    }
+    fetchConfirmed()
   }
 
   const confirmedPlayers = PLAYERS.filter((p) => confirmed.has(p.id))
@@ -96,7 +97,7 @@ export default function PlayersPage() {
               <p className="text-slate-600 text-sm italic">No players confirmed yet.</p>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                {confirmedPlayers.map((player, index) => (
+                {confirmedPlayers.map((player) => (
                   <PlayerCard
                     key={player.id}
                     player={player}
