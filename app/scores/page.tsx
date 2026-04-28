@@ -7,6 +7,7 @@ import AdminAuth from '@/components/AdminAuth'
 
 const SCORES_KEY = 'wheelbarrow_scores'
 const MANUAL_STATS_KEY = 'wheelbarrow_manual_stats'
+const CONFIRMED_KEY = 'wheelbarrow_confirmed_players'
 
 // Round metadata (courses confirmed for R1/R2, R3 TBD)
 const ROUNDS = [
@@ -52,6 +53,14 @@ function loadManualStats(): ManualStats {
 
 function saveManualStats(stats: ManualStats) {
   try { localStorage.setItem(MANUAL_STATS_KEY, JSON.stringify(stats)) } catch {}
+}
+
+function loadConfirmed(): Set<string> {
+  if (typeof window === 'undefined') return new Set()
+  try {
+    const saved = localStorage.getItem(CONFIRMED_KEY)
+    return saved ? new Set(JSON.parse(saved)) : new Set()
+  } catch { return new Set() }
 }
 
 // ─── Stat card ─────────────────────────────────────────────────────────────────
@@ -179,12 +188,14 @@ export default function ScoresPage() {
   const [tab, setTab] = useState<Tab>('leaderboard')
   const [scores, setScores] = useState<ScoreMap>({})
   const [manualStats, setManualStats] = useState<ManualStats>(DEFAULT_MANUAL)
+  const [confirmed, setConfirmed] = useState<Set<string>>(new Set())
   const [mounted, setMounted] = useState(false)
   const { isAdmin } = useAuth()
 
   useEffect(() => {
     setScores(loadScores())
     setManualStats(loadManualStats())
+    setConfirmed(loadConfirmed())
     setMounted(true)
   }, [])
 
@@ -203,8 +214,8 @@ export default function ScoresPage() {
     saveManualStats(next)
   }
 
-  // Build leaderboard rows
-  const leaderboard = PLAYERS.map((player) => {
+  // Build leaderboard rows — only confirmed players
+  const leaderboard = PLAYERS.filter((p) => confirmed.has(p.id)).map((player) => {
     const playerScores = scores[player.id] ?? [null, null, null]
     const played = playerScores.filter((s): s is number => s !== null)
     const total = played.length > 0 ? played.reduce((a, b) => a + b, 0) : null
@@ -234,7 +245,7 @@ export default function ScoresPage() {
         <div>
           <h1 className="section-title">Scores</h1>
           <p className="text-slate-500 text-sm mt-0.5">
-            {PLAYERS.length} players · 3 rounds
+            {confirmed.size} confirmed · 3 rounds
           </p>
         </div>
         <AdminAuth />
@@ -257,7 +268,13 @@ export default function ScoresPage() {
           {isAdmin && (
             <p className="text-xs text-gold-400/70 italic">Click any score cell to edit.</p>
           )}
-          <div className="card p-0 overflow-hidden">
+          {leaderboard.length === 0 && (
+            <div className="card text-center py-12">
+              <p className="text-slate-400 text-sm">No confirmed players yet.</p>
+              <p className="text-slate-600 text-xs mt-1">Confirm players on the Players page to populate the leaderboard.</p>
+            </div>
+          )}
+          {leaderboard.length > 0 && <div className="card p-0 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[500px] text-sm">
                 <thead>
@@ -310,7 +327,7 @@ export default function ScoresPage() {
                 </tbody>
               </table>
             </div>
-          </div>
+          </div>}
         </div>
       )}
 
