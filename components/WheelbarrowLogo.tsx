@@ -50,14 +50,6 @@ export default function WheelbarrowLogo({ className = '' }: WheelbarrowLogoProps
       <rect x="224" y="44" width="8" height="8" fill="#c9a84c" transform="rotate(45 228 48)" />
 
       {/* ══════════════════════════════════════════════════════════════
-          CIRCULAR MEDALLION — covers club crossing
-      ══════════════════════════════════════════════════════════════ */}
-      <circle cx="120" cy="155" r="56" fill="#c9a84c" />
-      <circle cx="120" cy="155" r="52" fill="#0a1628" />
-      <circle cx="120" cy="155" r="49" stroke="#c9a84c" strokeWidth="0.8" opacity="0.5" />
-      <circle cx="120" cy="155" r="46" stroke="#c9a84c" strokeWidth="0.4" opacity="0.25" />
-
-      {/* ══════════════════════════════════════════════════════════════
           WBI — large serif monogram in center
       ══════════════════════════════════════════════════════════════ */}
       <text
@@ -72,10 +64,6 @@ export default function WheelbarrowLogo({ className = '' }: WheelbarrowLogoProps
       >
         WBI
       </text>
-
-      {/* Fine rule above and below WBI */}
-      <line x1="78" y1="128" x2="162" y2="128" stroke="#c9a84c" strokeWidth="1" opacity="0.55" />
-      <line x1="78" y1="181" x2="162" y2="181" stroke="#c9a84c" strokeWidth="1" opacity="0.55" />
 
       {/* ══════════════════════════════════════════════════════════════
           TOP: WHEELBARROW text + divider
